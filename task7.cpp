@@ -1,68 +1,68 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool checkvalidityifcnffile(vector<vector<int>> &v)
-{
-    for (int i = 0; i < v.size(); i++) 
-    {
-        vector<int> row = v[i];
-        unordered_set<int> s;
+// Integer CNF check (for DIMACS-style CNF)
+bool checkvalidityifcnffile(vector<vector<int>> &v) {
+    int validCount = 0, invalidCount = 0;
 
-        for (int j = 0; j < row.size(); j++)
-            s.insert(row[j]);
+    for (int i = 0; i < v.size(); i++) {
+        vector<int> row = v[i];
+        unordered_set<int> s(row.begin(), row.end());
 
         bool val = false;
-
-        for (int j = 0; j < row.size(); j++) 
-        {
-            if (s.count(-row[j])) 
-            {
+        for (int j = 0; j < row.size(); j++) {
+            if (s.count(-row[j])) {
                 val = true;
                 break;
             }
         }
 
-        if (!val)
-            return false;
+        if (val)
+            validCount++;
+        else
+            invalidCount++;
     }
-    return true;
+
+    cout << "Valid clauses: " << validCount << endl;
+    cout << "Invalid clauses: " << invalidCount << endl;
+
+    return invalidCount == 0;
 }
 
-bool checkvalidityfortask6(vector<vector<string>>&v) {
+// String CNF check
+bool checkvalidityfortask6(vector<vector<string>> &v) {
+    int validCount = 0, invalidCount = 0;
+
     for (int i = 0; i < v.size(); i++) {
         vector<string> row = v[i];
-        unordered_set<string> s;
-
-        for (int j = 0; j < row.size(); j++)
-            s.insert(row[j]);
+        unordered_set<string> s(row.begin(), row.end());
 
         bool val = false;
-
-        for (int j = 0; j < row.size(); j++) 
-        {
+        for (int j = 0; j < row.size(); j++) {
             string lit = row[j];
-            string neg;
-            if (!lit.empty() && lit[0] == '~') 
-                neg = lit.substr(1);  // remove negation
-            else 
-                neg = "~" + lit;          // add negation
+            string neg = (!lit.empty() && lit[0] == '~') ? lit.substr(1) : "~" + lit;
 
-            if (s.count(neg)) 
-            {
+            if (s.count(neg)) {
                 val = true;
                 break;
             }
         }
 
-        if (!val) 
-            return false;
+        if (val)
+            validCount++;
+        else
+            invalidCount++;
     }
-    return true;
+
+    cout << "Valid clauses: " << validCount << endl;
+    cout << "Invalid clauses: " << invalidCount << endl;
+
+    return invalidCount == 0;
 }
 
+// Read DIMACS CNF file
 vector<vector<int>> readfile(string filepath) {
     fstream file(filepath, ios::in);
-
     if (!file.is_open()) {
         cout << "Error: Cannot open file " << filepath << endl;
         return {};
@@ -72,13 +72,15 @@ vector<vector<int>> readfile(string filepath) {
     string line;
 
     while (getline(file, line)) {
-        if (line[0] == 'p' || line[0] == 'c') continue;
+        if (line[0] == 'p' || line[0] == 'c')
+            continue;
 
         vector<int> row;
         stringstream sinput(line);
         int num;
         while (sinput >> num) {
-            if (num == 0) break;
+            if (num == 0)
+                break;
             row.push_back(num);
         }
 
@@ -95,7 +97,9 @@ int main() {
     cin >> filepath;
 
     vector<vector<int>> v = readfile(filepath);
-    cout<< checkvalidityifcnffile(v);
+    bool valid = checkvalidityifcnffile(v);
+
+    cout << "The formula is " << (valid ? "VALID" : "INVALID") << endl;
 
     return 0;
 }

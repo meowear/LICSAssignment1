@@ -98,10 +98,77 @@ string infixtoprefix(string str)
 
 }
 
-int main()
-{
+vector<vector<int>> readfile(string filepath) {
+    fstream file(filepath, ios::in);
+
+    if (!file.is_open()) {
+        cout << "Error: Cannot open file " << filepath << endl;
+        return {};
+    }
+
+    vector<vector<int>> v;
+    string line;
+
+    while (getline(file, line)) {
+        if (line.empty() || line[0] == 'p' || line[0] == 'c') continue;
+
+        vector<int> row;
+        stringstream sinput(line);
+        int num;
+        while (sinput >> num) {
+            if (num == 0) break;
+            row.push_back(num);
+        }
+
+        v.push_back(row);
+    }
+
+    file.close();
+    return v;
+}
+
+string clauseToPrefix(vector<int>& clause) {
+    string s = "(+";
+    for (int lit : clause) {
+        s += " ";
+        if (lit < 0)
+            s += "~" + to_string(-lit);  // negative numbers → ~N
+        else
+            s += to_string(lit);          // positive numbers stay
+    }
+    s += ")";
+    return s;
+}
+
+string cnfToPrefix(vector<vector<int>>& cnf) {
+    if (cnf.empty()) return "";
+
+    string prefix = clauseToPrefix(cnf[0]);
+
+    for (size_t i = 1; i < cnf.size(); i++) {
+        string nextClause = clauseToPrefix(cnf[i]);
+        prefix = "(* " + prefix + " " + nextClause + ")";
+    }
+
+    return prefix;
+}
+
+int main() {
+
     string str;
     cout << "Enter the infix string:";
     getline(cin,str);
-    cout<< infixtoprefix(str);
+    cout<< infixtoprefix(str)<<endl;///using string formula input
+
+
+    string filepath;//using the cnf file input
+    cout << "Enter the filepath: " << endl;
+    cin >> filepath;
+
+    vector<vector<int>> v_infix = readfile(filepath);
+    
+    string prefix = cnfToPrefix(v_infix);
+    cout << prefix << endl;
+
+    return 0;
 }
