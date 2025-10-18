@@ -1,0 +1,4 @@
+Changed a few things in task 6 in the main.cpp file but not in task.cpp.Didnt update the task 6 file(printing the cnf formula) ......too lazy to import since i made use of task 2 function
+Changed the get truth value functions of task 5 only in main.cpp not in task5.cpp since if no of atoms>20 taking long(40 sec+) to produce truth table more than a million entries.Put up a restriction only prints truth table if no of atoms are less than 20.
+Made a few naming changes in main.cpp and not the original task files.
+Please delete my comments and add proper comments since they are too casual and mostly useless

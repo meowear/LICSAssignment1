@@ -2,7 +2,7 @@
 using namespace std;
 
 // Integer CNF check (for DIMACS-style CNF)
-bool checkvalidityifcnffile(vector<vector<int>> &v) {
+bool checkvalidity_cnffile(vector<vector<int>> &v) {
     int validCount = 0, invalidCount = 0;
 
     for (int i = 0; i < v.size(); i++) {
@@ -30,7 +30,7 @@ bool checkvalidityifcnffile(vector<vector<int>> &v) {
 }
 
 // String CNF check
-bool checkvalidityfortask6(vector<vector<string>> &v) {
+bool checkvalidity_string(vector<vector<string>> &v) {
     int validCount = 0, invalidCount = 0;
 
     for (int i = 0; i < v.size(); i++) {
@@ -97,7 +97,7 @@ int main() {
     cin >> filepath;
 
     vector<vector<int>> v = readfile(filepath);
-    bool valid = checkvalidityifcnffile(v);
+    bool valid = checkvalidity_cnffile(v);
 
     cout << "The formula is " << (valid ? "VALID" : "INVALID") << endl;
 

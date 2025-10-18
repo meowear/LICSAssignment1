@@ -41,7 +41,7 @@ void getatoms(node *current,set<char> &atomset)
     getatoms(current->right,atomset);
 }
 
-bool bottomuptraversal(node* current, map<char,bool> &truthvalues) {
+bool evaluate_string(node* current, map<char,bool> &truthvalues) {
     if (current == nullptr)
         return false;
 
@@ -49,10 +49,10 @@ bool bottomuptraversal(node* current, map<char,bool> &truthvalues) {
         return truthvalues[current->data];
 
     if (current->data == '~')
-        return !bottomuptraversal(current->right, truthvalues);
+        return !evaluate_string(current->right, truthvalues);
 
-    bool left = bottomuptraversal(current->left, truthvalues);
-    bool right = bottomuptraversal(current->right, truthvalues);
+    bool left = evaluate_string(current->left, truthvalues);
+    bool right = evaluate_string(current->right, truthvalues);
 
     switch (current->data) {
         case '*':
@@ -66,7 +66,7 @@ bool bottomuptraversal(node* current, map<char,bool> &truthvalues) {
     }
 }
 
-void gettruthvalue(node *root)
+void gettruthvalue_char(node *root)
 {
      set<char> atomset;
      getatoms(root,atomset);
@@ -87,7 +87,7 @@ void gettruthvalue(node *root)
              truthvalues[atoms[j]] = val;
              cout << val << " ";
          }
-         bool val = bottomuptraversal(root, truthvalues);
+         bool val = evaluate_string(root, truthvalues);
          cout << "| " << val << "\n";
      }
 }
